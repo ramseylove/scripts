@@ -1,0 +1,51 @@
+#!/usr/bin/expect
+
+# Usage Adds key to new Linux acadaemy server and sets cloud_user password on creation
+
+set timeout 60
+set home $env(HOME)
+set url [lindex $argv 0]
+set o_pass [lindex $argv 1]
+set n_pass [lindex $argv 2]
+set key_name [lindex $argv 3]
+set try 0
+# set variable to any prompt type
+set prompt "(#|%|─|>|❯|\\\$) "
+#set prompt [string trim $prompt]
+
+spawn ssh-copy-id -f -i $home/.ssh/$key_name cloud_user@$url
+
+# If statement, determining if ssh-copy-id was able to reach the server
+#"*ssh: Could not resolve hostname*" {puts "Host error -> $expect_out(buffer)";exit 1}
+expect { 
+	")? " { 
+		send "yes\r"
+	 	exp_continue
+	 }
+	
+	"Password: " { 
+		if {$try == 0} {
+			send -- "$n_pass\r"
+			incr try
+		} else {
+			send -- "$o_pass\r"
+		}
+		exp_continue
+	}
+
+	"(current) UNIX password: " { 
+		send "$o_pass\r" 
+		expect {
+			"password: " { 
+				send "$n_pass\r"
+				exp_continue
+			 }
+		}
+		sleep 2
+		exp_continue
+	}
+	-re $prompt {
+		exit 
+	}
+
+}
