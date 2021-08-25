@@ -1,6 +1,7 @@
 import csv
 import glob
 import math
+import os
 
 folder = 'folder_to_compare'
 
@@ -21,7 +22,8 @@ start_num = end_num - num
 
 while(iter_num > 0):
     print(f'{iter_num} Start num: {start_num}, End num: {end_num}')
-    output_file = open(f"local_flower_images{iter_num:02}.csv", "w")
+    filename = os.path.join('csvs/', f"local_${folder}_{iter_num:02}.csv")
+    output_file = open(filename, "w")
         
     for line in file_list[start_num:end_num]:
         line_split = line.split('/')

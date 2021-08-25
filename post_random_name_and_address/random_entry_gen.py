@@ -1,6 +1,8 @@
 from collections import namedtuple
 import random
+import requests
 
+count = 30
 
 first_name = [ 'James', 'John', 'Robert', 'Micheal', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Charles', 'Mary', 'Patricia', 'Jennifer', 'Linda', 'Elizabeth', 'Barbra', 'Susan', 'Jessica', 'Sarah', 'Karen' ]
 
@@ -31,7 +33,30 @@ while count >= 0:
     print(full)
     count -= 1
 
+url = "{{atria_base_url}}/api/entry"
 
+payload={'event_id': '7902',
+'first_name': 'Rick',
+'last_name': 'Winslowly',
+'address': '15436 EAst ST george',
+'city': 'Winthrope',
+'state': 'WI',
+'zip': '84107',
+'email': '',
+'phone': '',
+'ipad_timestamp': '',
+'device_id': 'D1C7A145-5AE8-4CBB-9953-5EC7145AE532',
+'app_version': '3.4'}
+files=[
+
+]
+headers = {
+  'ci_session': 'f7ja8usp88ugb17g5aa3usqdaj1mtt1d'
+}
+
+response = requests.request("POST", url, headers=headers, data=payload, files=files)
+
+print(response.text)
 
 
 

@@ -8,8 +8,11 @@ KEY_FILE=${KEY_FILE:-'id_rsa'}
 PUB="${KEY_FILE}.pub"
 ID=${ID}
 
-SERVER="ramseylove$ID.mylabserver.com"
-PASS='I$331love'
+username = 'user_id'
+PASS='P@$$w0rd'
+
+SERVER="$username$ID.mylabserver.com"
+
 
 # remove old server identity from known_hosts. LA reuses hostnames and get an error
 if ssh-keyscan -t ecdsa $SERVER;then

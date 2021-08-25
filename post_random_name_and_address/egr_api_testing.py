@@ -1,19 +1,17 @@
 import requests
 import json
 
-#https://mgrexpression-mgrexpression-dev.azurewebsites.net/assets/uploads/flower_images/86B5F65D-59AC-45EF-B7D9-C642A43383EF-7851-1567530429733-Flower_2_smallflower.jpg
-#url = 'https://mgrapi-v1.azurewebsites.net/api/flowerSets_get/7804?code=2LkdNZluFaleEaVn3PW8wh9fIP1a7Sj8FJfuwejpWKUOyUziZYfipg=='
+id = 7868
+server_url = 'https://url_to_server.com'
+key = 'define_api_key'
 
-msgr = 'https://egrfa.azurewebsites.net/api/'
-atria = 'https://mgrapi-v1.azurewebsites.net/api/'
 events_get = 'flowersets_get/'
 event_get = 'flowerset_get/'
-msgr_key = 'p2OPCrGvD0ScKZQRrPJM41GG1oPInIigEV9UBeIaLm0CtB6wUpaWeQ=='
-atria_key = '2LkdNZluFaleEaVn3PW8wh9fIP1a7Sj8FJfuwejpWKUOyUziZYfipg=='
 
-payload = {'code':msgr_key}
-#7804
-event_id = 7868
+
+payload = {'code':key}
+
+
 events = requests.get(f'{msgr}{events_get}{event_id}', params=payload)
 
 flower_sets = events.json()

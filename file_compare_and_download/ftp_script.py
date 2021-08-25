@@ -1,5 +1,6 @@
 import csv
 import math
+import os
 from ftplib import FTP
 
 # ftp credentials
@@ -34,7 +35,8 @@ start_num = end_num - num
 
 while(iter_num > 0):
     print(f'{iter_num} Start num: {start_num}, End num: {end_num}')
-    output_file = open(f"server_${folder}_{iter_num:02}.csv", "w")
+    filename = os.path.join('csvs/', f"server_${folder}_{iter_num:02}.csv")
+    output_file = open(filename, "w")
         
     for line in dir_list[start_num:end_num]:
         if line == 'thumbnail':
