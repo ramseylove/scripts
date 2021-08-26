@@ -1,16 +1,23 @@
+import datetime as dt
 import random
 import requests
 
-count = 30
-def create_random_entries(count=30):
+base_url = 'http://your.url.com'
 
+event_id = '4706'
+
+# currently need to define the cookie found in dev_tools because auth is poorly implemented
+session = 'ksadjoicvoiewr32'
+
+
+def create_random_entries(count=10):
+  
   first_name = [ 'James', 'John', 'Robert', 'Micheal', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Charles', 'Mary', 'Patricia', 'Jennifer', 'Linda', 'Elizabeth', 'Barbra', 'Susan', 'Jessica', 'Sarah', 'Karen' ]
 
   last_name = [ 'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Meyer', 'Valentine', 'Nichols' ]
 
   street_name = ['Park Ave', 'Main Ave', 'Sixth St', 'Oak Ln', 'Pine St', 'Maple Ave', 'Cedar Rd', 'Elm Ave', 'Washington St', 'Lake st', 'Hill rd', 'Lincoln Blvd', 'Lake View', 'Golf Resort rd', '9th St', 'Dogwood ave', 'Magnolia Ave', 'Second Ave']
 
-  #csz_tuple = namedtuple('csz', ['city', 'state', 'zip'])
   city_state_zip = [ ['Springfield', 'MA', '1101'], ['Washington', 'FL', '32427'], ['Franklin', 'AL', '36083'], ['Lebanon', 'Ks', '66952'], 
       ['Clinton', 'WA', '98236'], ['Greenville', 'UT', '84731'], ['Bristol', 'IA', '50611'], ['Fairview', 'NC', '28730'], 
       ['Salem', 'OR', '97301'], ['Madison', 'TN', '37116'], ['Georgetown', 'NY', '13072'], ['Arlington', 'IL', '61312'], 
@@ -19,44 +26,54 @@ def create_random_entries(count=30):
 
 
   while count >= 0:
-      rand_first = random.choice(first_name)
-      rand_last = random.choice(last_name)
-      rand_street = random.choice(street_name)
-      rand_num = random.randint(100, 9999)
-      rand_csz = random.choice(city_state_zip)
+    csz = random.choice(city_state_zip)
+    person = {
+      'first_name': random.choice(first_name),
+      'last_name': random.choice(last_name),
+      'house_num': random.randint(100, 9999),
+      'street': random.choice(street_name),
+      'city': csz[0],
+      'state': csz[1],
+      'zip': csz[2]
+    }
 
-      full = f'''
-      {rand_first} {rand_last}
-      {rand_num} {rand_street}
-      {rand_csz[0]}, {rand_csz[1]} {rand_csz[2]}
-      '''
-      print(full)
-      count -= 1
+    name_and_address = f'''
+    {person['first_name']} {person['last_name']}
+    {person['house_num']} {person['street']}
+    {person['city']}, {person['state']} {person['zip']}
+    '''
+    print(name_and_address)
+    count -= 1
+    yield person
 
-# url = "{{atria_base_url}}/api/entry"
+for item in create_random_entries():
+  print(item)
 
-# payload={'event_id': '7902',
-# 'first_name': 'Rick',
-# 'last_name': 'Winslowly',
-# 'address': '15436 EAst ST george',
-# 'city': 'Winthrope',
-# 'state': 'WI',
-# 'zip': '84107',
-# 'email': '',
-# 'phone': '',
-# 'ipad_timestamp': '',
-# 'device_id': 'D1C7A145-5AE8-4CBB-9953-5EC7145AE532',
-# 'app_version': '3.4'}
-# files=[
+def post_entry(event_id, *count):
+  
+  url = "base_url/api/entry"
 
-# ]
-# headers = {
-#   'ci_session': 'f7ja8usp88ugb17g5aa3usqdaj1mtt1d'
-# }
+  for person in create_random_entries(count=count):
+    payload={'event_id': event_id,
+    'first_name': person['first_name'],
+    'last_name': person['last_name'],
+    'address': person['house_num'] + person['street'],
+    'city': person['city'],
+    'state': person['state'],
+    'zip': person['zip'],
+    'email': '',
+    'phone': '',
+    'ipad_timestamp': str(int(dt.datetime.now().timestamp())),
+    'device_id': 'D1C7A145-5AE8-4CBB-9953-5EC7145AE532',
+    'app_version': '3.4'}
+  
+    headers = {
+      'ci_session': session
+    }
 
-# response = requests.request("POST", url, headers=headers, data=payload, files=files)
+    response = requests.request("POST", url, headers=headers, data=payload )
 
-# print(response.text)
+    print(response.text)
 
 
 
